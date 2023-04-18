@@ -1,5 +1,7 @@
 /* eslint-disable */
 import * as THREE from "three";
+import { Euler } from "three";
+
 import * as React from "react";
 import { useRef, useState } from "react";
 import { Canvas, useFrame, useLoader } from "@react-three/fiber";
@@ -29,16 +31,16 @@ function Box(props: JSX.IntrinsicElements["mesh"]) {
   );
 }
 
-const Scene = () => {
+const Scene = (props: JSX.IntrinsicElements["mesh"]) => {
   const fbxRef = useRef<THREE.Mesh>(null!);
   const result = useLoader(FBXLoader, "Room1.fbx");
-  useFrame((state, delta) => {
-    fbxRef.current.rotation.y += 0.01;
-    fbxRef.current.rotation.x += 0.01;
-  });
+  //   useFrame((state, delta) => {
+  //     fbxRef.current.rotation.y += 0.01;
+  //     fbxRef.current.rotation.x += 0.01;
+  //   })
 
   return (
-    <mesh ref={fbxRef}>
+    <mesh ref={fbxRef} {...props}>
       <primitive object={result} scale={0.002} />
     </mesh>
   );
@@ -46,13 +48,14 @@ const Scene = () => {
 
 export default function ThreeModel() {
   return (
-    <Canvas>
+    <Canvas className="flex justify-center items-center">
       <ambientLight intensity={0.5} />
       <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
       <pointLight position={[-10, -10, -10]} />
-      <Scene />
-      {/* <Box position={[-1.2, 0, 0]} />
-      <Box position={[1.2, 0, 0]} /> */}
+      {/* Euler represent rotation axis */}
+      <Scene position={[-1, 0, 0]} rotation={new Euler(0.7, -1, 0)} />
+      {/* <Box position={[-1.2, 0, 0]} /> */}
+      <Box position={[2, 1, 0]} />
     </Canvas>
   );
 }
