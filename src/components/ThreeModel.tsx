@@ -13,8 +13,13 @@ function Box(props: JSX.IntrinsicElements["mesh"]) {
   // Hold state for hovered and clicked events
   const [hovered, hover] = useState(false);
   const [clicked, click] = useState(false);
-  // Rotate mesh every frame, this is outside of React without overhead
-  useFrame((state, delta) => (ref.current.rotation.x += 0.01));
+
+  // look at mouse
+  useFrame(({ mouse, viewport }) => {
+    const x = (mouse.x * viewport.width) / 2.5;
+    const y = (mouse.y * viewport.height) / 2.5;
+    ref.current.lookAt(x, y, 1);
+  });
 
   return (
     <mesh
@@ -34,10 +39,13 @@ function Box(props: JSX.IntrinsicElements["mesh"]) {
 const Scene = (props: JSX.IntrinsicElements["mesh"]) => {
   const fbxRef = useRef<THREE.Mesh>(null!);
   const result = useLoader(FBXLoader, "Room1.fbx");
-  //   useFrame((state, delta) => {
-  //     fbxRef.current.rotation.y += 0.01;
-  //     fbxRef.current.rotation.x += 0.01;
-  //   })
+
+  // lookAt mouse
+  useFrame(({ mouse, viewport }) => {
+    const x = (mouse.x * viewport.width) / 2.5;
+    const y = (mouse.y * viewport.height) / 2.5;
+    fbxRef.current.lookAt(x, y, 1);
+  });
 
   return (
     <mesh ref={fbxRef} {...props}>
